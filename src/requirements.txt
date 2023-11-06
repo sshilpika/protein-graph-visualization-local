@@ -1,0 +1,8 @@
+Flask==2.0.1
+Werkzeug==2.0.1
+Flask-Cors
+Flask-Sijax
+pygraphviz
+networkx
+joblib
+watchdog

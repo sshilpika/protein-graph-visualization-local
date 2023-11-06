@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="#">
+    <title>Graph Visualization</title>
+
+    <script type="text/javascript" src="/static/js/sijax/sijax.js"></script>
+    <script type="text/javascript">{{ g.sijax.get_js()|safe }} </script>
+    <script src="{{ url_for('static',filename='js/jqueryv3.5.1.js')}}"></script>
+
+    <script src="{{ url_for('static', filename='js/d3.v7.js')}}"></script>
+</head>
+<body>
+
+<!--<a href="javascript://" onclick="Sijax.request('getfdg', ['graph3.json']);">Click here</a>-->
+
+<table class="main-table">
+    <tr>
+        <td>
+            <svg id="fdg" width="10000" height="10000"></svg>
+        </td>
+    </tr>
+</table>
+<script>
+
+</script>
+
+</body>
+
+</html>
