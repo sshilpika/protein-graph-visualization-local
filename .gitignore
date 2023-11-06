@@ -159,3 +159,4 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 .DS_Store
+src/.DS_Store src/visg/.DS_Store src/visg/scripts/.DS_Store src/visg/static/.DS_Store src/visg/static/data/.DS_Store src/visg/static/js/.DS_Store
