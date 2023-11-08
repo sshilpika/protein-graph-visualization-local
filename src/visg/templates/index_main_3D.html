@@ -168,7 +168,7 @@
 
       //if(counter >= counterStopAt)
       Sijax.request("checkStopAt", [counterStopAt])
-    }, 12000);
+    }, 15000);
 
     function stopFunction() {
       clearInterval(myInterval);
@@ -322,6 +322,8 @@
   }
 
 
+
+
   // set up vis for GUI
   const settings = new Settings();
   const gui = new dat.GUI();
@@ -340,6 +342,8 @@
   folder3.add({ 'Pause/Resume Data Reload': pauseResumeDataLoad }, 'Pause/Resume Data Reload');
   folder3.open();
 
+
+  updateLinkCount();
 
 
 
