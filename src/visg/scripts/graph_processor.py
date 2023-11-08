@@ -5,7 +5,6 @@ import os
 from os import listdir
 from os.path import isfile, join
 import json
-import subprocess
 import pygraphviz
 from pygraphviz import AGraph
 import networkx as nx
@@ -67,7 +66,7 @@ class Protein_Graph:
 
     @staticmethod
     def wc_l(directory_path, filename):
-        line_count = int(subprocess.check_output(["wc", "-l", os.path.join(directory_path, filename)]).split()[0])
+        line_count = sum(1 for _ in open(os.path.join(directory_path, filename)))
         return line_count
 
     # format graph and save in json files

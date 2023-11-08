@@ -160,3 +160,5 @@ cython_debug/
 #.idea/
 .DS_Store
 src/.DS_Store src/visg/.DS_Store src/visg/scripts/.DS_Store src/visg/static/.DS_Store src/visg/static/data/.DS_Store src/visg/static/js/.DS_Store
+src/visg/static/data/*
+!src/visg/static/data/master.dot

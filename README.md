@@ -8,15 +8,24 @@ A Python library for visualizing dynamically generated protein interactions usin
 
    ```
    conda create -n myenv python=3.8
+   conda activate myenv
    ```
 2. Install packages
     ```
     pip install -r requirements.txt
     ```
+Note: You may need to install [pygraphvis](https://pygraphviz.github.io/documentation/stable/install.html) using conda forge:
+
+`conda install --channel conda-forge pygraphviz`
+
 3. Start server
-`./start.sh`
+
+```
+cd src/
+./start.sh
+```
 
 4. Open browser 
     ```angular2html
-    http://localhost:5000/index
+    http://127.0.0.1:5000/index
     ```
