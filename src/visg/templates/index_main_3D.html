@@ -50,6 +50,7 @@
   let enableNodeDragging = false;
   let enablePointerInteractions = true;
   let pauseAnimation = false;
+  let showLinkWidth = false;
   let counterStopAt = 10;
 
   const Graph = ForceGraph3D()(elem)
@@ -75,7 +76,8 @@
               return [...highlightLinks].filter((x) => x.source.id===link.source.id && x.target.id===link.target.id).length !== 0 ? 4 : 0;
           })
           .linkDirectionalParticleWidth(2)
-          .linkWidth(link => [...highlightLinks].filter((x) => x.source.id===link.source.id && x.target.id===link.target.id).length!==0 ? 4 : link.penwidth ? link.penwidth : 1.0 )
+          // .linkWidth(link => (showLinkWidth && link.penwidth) ? link.penwidth : 0 )
+          .linkWidth(link => [...highlightLinks].filter((x) => x.source.id===link.source.id && x.target.id===link.target.id).length!==0 ? 4 : link.penwidth ? link.penwidth : 0 )
           .linkDirectionalArrowLength(2)
           .linkDirectionalArrowRelPos(1)
           .linkDirectionalArrowColor(link => link.color ? pSBC ( 0.1, standardize_color(link.color), color8 ) : 'gray' )
@@ -158,7 +160,10 @@
         dataUpdateCallback(reset);
         if(reset) reset = false;
         counter+=1;
-        // Graph.numDimensions(3);
+
+        if(counter % 2 === 0)
+          zoomToFit();
+
       }
 
       //if(counter >= counterStopAt)
@@ -299,6 +304,14 @@
     Graph.numDimensions(3);
   }
 
+
+  // showLinkWidth
+  const toggleLinkWidth = () => {
+    showLinkWidth = !showLinkWidth;
+    Graph
+        .linkWidth(Graph.linkWidth())
+  }
+
   // update graph when max and min links connecting the graph is specified
   function updateLinkCount(minLinks = settings.MinLinks, maxLinks = settings.MaxLinks) {
     reloadGraphData().stopFunction()
@@ -322,6 +335,7 @@
   var folder3 = gui.addFolder('GUI Buttons');
   folder3.add({ 'Zoom to Fit': zoomToFit }, 'Zoom to Fit');
   folder3.add({ 'Show Link Directions': toggleLinkAnimation }, 'Show Link Directions');
+  // folder3.add({ 'Show Link Width': toggleLinkWidth }, 'Show Link Width');
   folder3.add({ 'Show Node Neighbors': showNodeNeighbors }, 'Show Node Neighbors');
   folder3.add({ 'Pause/Resume Data Reload': pauseResumeDataLoad }, 'Pause/Resume Data Reload');
   folder3.open();
