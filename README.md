@@ -15,15 +15,14 @@ A Python library for visualizing dynamically generated protein interactions usin
     pip install -r requirements.txt
     ```
 Note: You may need to install [pygraphvis](https://pygraphviz.github.io/documentation/stable/install.html) using conda forge:
-
 `conda install --channel conda-forge pygraphviz`
 
 3. Start server
 
-```
-cd src/
-./start.sh
-```
+   ```
+   cd src/
+   ./start.sh
+   ```
 
 4. Open browser 
     ```angular2html
