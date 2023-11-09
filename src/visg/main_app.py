@@ -51,7 +51,6 @@ class Listener:
 class Handler(FileSystemEventHandler):
     @staticmethod
     def on_modified(event):
-        print("this is watchFlag..",Listener.watchFlag)
         if event.is_directory:
             return None
         elif event.src_path.endswith(Listener.FILE_TO_WATCH) and Listener.watchFlag:
@@ -69,7 +68,6 @@ class Handler(FileSystemEventHandler):
                         f.write(line)
 
                     processed_line_counts = lineC
-                print("This is FINAL K", Protein_Graph.finalK)
                 finalK = Protein_Graph.get_graph(Protein_Graph.minlink_count, Protein_Graph.maxlink_count, Listener.FILE_TO_WRITE, True, False)
                 print(f'new final counter value is {finalK}')
 
