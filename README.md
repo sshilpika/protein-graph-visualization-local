@@ -33,7 +33,7 @@ Note: You may need to install [pygraphvis](https://pygraphviz.github.io/document
    ./start.sh
    ```
 
-6. Open browser
+6. Open browser (Google Chrome preferred)
     ```angular2html
     http://127.0.0.1:5000/index
     ```
