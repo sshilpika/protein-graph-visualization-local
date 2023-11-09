@@ -2,7 +2,7 @@
 
 A Python library for visualizing dynamically generated protein interactions using 3D node-link layout.
 
-[DEMO](./demo/Protein_Interaction_Demo.mp4)
+[DEMO Video](https://drive.google.com/file/d/1asdQyc7OI6UoSYfjNL5yBujIoi59XTUy/view?usp=sharing)
 
 ## Installation
 
