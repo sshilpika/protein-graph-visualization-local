@@ -163,3 +163,4 @@ src/.DS_Store src/visg/.DS_Store src/visg/scripts/.DS_Store src/visg/static/.DS_
 src/visg/static/data/*
 src/visg/static/js/sijax/
 !src/visg/static/data/master.dot
+!src/visg/static/data/interactions_full_run.dot
