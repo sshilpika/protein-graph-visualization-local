@@ -1,5 +1,6 @@
 
 const collisonStrengthVal = 20;
+const bckColor = '#00000f';
 
 const getChunks = (arr, perChunk= 5) => {
 

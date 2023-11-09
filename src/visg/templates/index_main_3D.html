@@ -29,8 +29,11 @@
   <script type="text/javascript" src="/static/js/my_utils.js"></script>
 </head>
 <body>
-
+<div>
+  <p id="stats" style="color:white; position: fixed; z-index: 1; padding-left: 10px; " ><i></i></p>
+</div>
 <div id="3d-graph"></div>
+
 
 <script>
 
@@ -54,7 +57,7 @@
   let counterStopAt = 10;
 
   const Graph = ForceGraph3D()(elem)
-          .backgroundColor('#00000f') //#101020
+          .backgroundColor(bckColor) //#101020
           .graphData(initData)
           .enableNodeDrag(enableNodeDragging)
           .enablePointerInteraction(enablePointerInteractions)
@@ -230,10 +233,17 @@
       newNodes = dataPart.nodes
     }
 
-    Graph.graphData({
+    const result = {
       nodes: [...oldNodes, ...newNodes ],
       links: [...links, ...dataPart.links ]
-    });
+    };
+
+    Graph.graphData(result);
+
+    const nlen = result.nodes ? result.nodes.length : 0;
+    const llen = result.links ? result.links.length : 0;
+
+    document.getElementById("stats").innerHTML = `Processed proteins ${nlen} and interactions ${llen}`;
 
 
   }

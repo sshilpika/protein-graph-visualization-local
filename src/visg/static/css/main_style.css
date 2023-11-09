@@ -6,3 +6,11 @@ body{
     border: #2C2C2C;
     color: white;
 }
+
+#stats {
+    color:white;
+    position: fixed;
+    z-index: 1;
+    padding-left: 10px;
+    font-style: italic;
+}
