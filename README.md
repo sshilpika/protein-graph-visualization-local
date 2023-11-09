@@ -6,7 +6,7 @@ A Python library for visualizing dynamically generated protein interactions usin
 
 ## Installation
 
-1. Clone the github page repository
+1. Clone the github repository
 
 
 2. Requires `python=3.8`
