@@ -9,7 +9,7 @@ A Python library for visualizing dynamically generated protein interactions usin
 1. Clone the github repository
 
 
-2. Requires `python=3.8`
+2. Requires `anaconda` and `python=3.8`
 
    ```
    conda create -n myenv python=3.8
