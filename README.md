@@ -1,4 +1,4 @@
-# Visualizing Dynamically Generated Protein Interactions 
+# Visualizing Dynamically Generated Protein Interactions
 
 A Python library for visualizing dynamically generated protein interactions using 3D node-link layout.
 
@@ -6,13 +6,16 @@ A Python library for visualizing dynamically generated protein interactions usin
 
 ## Installation
 
-1. Requires `python=3.8`
+1. Clone the github page repository
+
+
+2. Requires `python=3.8`
 
    ```
    conda create -n myenv python=3.8
    conda activate myenv
    ```
-2. Install packages
+3. Install packages
     ```
     cd src/
     pip install -r requirements.txt
@@ -20,12 +23,17 @@ A Python library for visualizing dynamically generated protein interactions usin
 Note: You may need to install [pygraphvis](https://pygraphviz.github.io/documentation/stable/install.html) using conda forge:
 `conda install --channel conda-forge pygraphviz`
 
-3. Start server
+4. The data file in dot file format should be stored in
+   ```
+   ./src/visg/static/data/
+   ```
+
+5. Start server
    ```
    ./start.sh
    ```
 
-4. Open browser 
+6. Open browser
     ```angular2html
     http://127.0.0.1:5000/index
     ```
