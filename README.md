@@ -12,6 +12,7 @@ A Python library for visualizing dynamically generated protein interactions usin
    ```
 2. Install packages
     ```
+    cd src/
     pip install -r requirements.txt
     ```
 Note: You may need to install [pygraphvis](https://pygraphviz.github.io/documentation/stable/install.html) using conda forge:
@@ -20,7 +21,6 @@ Note: You may need to install [pygraphvis](https://pygraphviz.github.io/document
 3. Start server
 
    ```
-   cd src/
    ./start.sh
    ```
 
