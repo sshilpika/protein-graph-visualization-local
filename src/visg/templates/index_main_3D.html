@@ -66,7 +66,17 @@
             return showNeighbors ? node.neighbors.length === 0 ? `${node.id} → []` : `${node.id} (In → ${node.in_degree}, Out → ${node.out_degree}) </br> Neighbors → ${getChunks(node.neighbors)}`: `${node.id} (In → ${node.in_degree}, Out → ${node.out_degree})`;
           })
           .nodeColor(node => {
-            return highlightNodes.has(node.id) ? node.id === hoverNode ? 'red' : '#FFA000' : "gray";
+
+            if(highlightNodes.has(node.id)){
+              if(node.id === hoverNode) {
+                return "red";
+              }else{
+                return '#FFA000';
+              }
+            }else{
+              return "gray";
+            }
+
           })
           .nodeVal(node => (node.neighbors.length > 20 && node.neighbors.length < 30) ? 2 : (node.neighbors.length >= 30) ? 3 : 1)
           .nodeResolution(20)
