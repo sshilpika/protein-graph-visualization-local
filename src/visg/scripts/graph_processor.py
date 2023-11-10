@@ -102,9 +102,23 @@ class Protein_Graph:
             data_main_part = {}
             data_main_part["nodes"] = data_main["nodes"][ i-step : i ]
             all_nodes = [d["id"] for d in data_main_part["nodes"]]
+            data_main_part["links"] = [link for link in data_main["links"] if link["source"] in all_nodes and link["target"] in all_nodes]
+
+            for key in data_main.keys():
+                data_main_part_meta = {}
+                for key in data_main.keys():
+                    if key not in ["nodes", "links"]:
+                        data_main_part_meta[key] = data_main[key]
+
+            data_main_part_meta['nodes'] = data_main_part['nodes']
+            data_main_part_meta['links'] = data_main_part['links']
+
+            G1 = nx.node_link_graph(data_main_part_meta, directed=True)
 
             for n in data_main_part["nodes"]:
-                n["neighbors"] = [nei for nei in list(nx.all_neighbors(G, n["id"])) if nei in all_nodes]
+                n["neighbors"] = list(set([nei for nei in list(nx.all_neighbors(G, n["id"])) if nei in all_nodes]))
+                n["in_degree"] = G1.in_degree(n["id"])
+                n["out_degree"] = G1.out_degree(n["id"])
                 n["links"] = []
                 n['node_neighbor_count'] = 0
 
@@ -135,7 +149,6 @@ class Protein_Graph:
                         n["links"].append(link)
 
 
-            data_main_part["links"] = [link for link in data_main["links"] if link["source"] in all_nodes and link["target"] in all_nodes]
 
 
             with open(os.path.join(data_path,"graph_master_part"+str(data_part_width)+"_"+str(k + finalK)+".json"), 'w') as f:

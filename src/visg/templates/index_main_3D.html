@@ -63,7 +63,7 @@
           .enablePointerInteraction(enablePointerInteractions)
           .nodeId('id')
           .nodeLabel(node => {
-            return showNeighbors ? node.neighbors.length === 0 ? `${node.id} → []` : `${node.id} → ${getChunks(node.neighbors)}`: `${node.id}`;
+            return showNeighbors ? node.neighbors.length === 0 ? `${node.id} → []` : `${node.id} (In → ${node.in_degree}, Out → ${node.out_degree}) </br> Neighbors → ${getChunks(node.neighbors)}`: `${node.id} (In → ${node.in_degree}, Out → ${node.out_degree})`;
           })
           .nodeColor(node => {
             return highlightNodes.has(node.id) ? node.id === hoverNode ? 'red' : '#FFA000' : "gray";
@@ -155,7 +155,7 @@
 
   // module for timed calls for graph updates
 
-  const reloadGraphData = ( reset = false, stopAt = counterStopAt ) => {
+  function reloadGraphData( reset = false, stopAt = counterStopAt ) {
 
     counter = 0;
     console.log("stop at", +stopAt, counter, counterStopAt)
@@ -200,13 +200,19 @@
 
   }
 
+  // reset Graph
+  function resetGraph(){
+    Graph.graphData(initData)
+
+  }
+
 
   // update graph with new data
   function addGraphData(dataPart, reset = false){
 
     if(reset){
       console.log("resetting...")
-      Graph.graphData(initData)
+      resetGraph();
     }
 
     const { nodes, links } = Graph.graphData();
@@ -223,6 +229,18 @@
         } else{
           nodesFound.push(n.id);
           const oldLinkVals = [...dataPart.links].filter(newL => (newL.source === n.id) || (newL.target === n.id))
+
+          let inLinks = 0;
+          let outLinks = 0;
+          oldLinkVals.forEach(inoutl => {
+            if(n.id === inoutl.source)
+              outLinks+=1
+            else if (n.id === inoutl.target)
+              inLinks +=1
+          })
+
+          n.in_degree += inLinks;
+          n.out_degree += outLinks;
 
           n.links = [...n.links, ...oldLinkVals]
           n.neighbors = [...new Set([...n.neighbors, ...oldNVals.neighbors])]
@@ -242,6 +260,7 @@
     };
 
     Graph.graphData(result);
+    updateHighlight();
 
     const nlen = result.nodes ? result.nodes.length : 0;
     const llen = result.links ? result.links.length : 0;
@@ -330,6 +349,11 @@
 
   }
 
+  function startDataLoad(){
+    resetGraph();
+    updateLinkCount();
+  }
+
 
 
 
@@ -349,13 +373,14 @@
   // folder3.add({ 'Show Link Width': toggleLinkWidth }, 'Show Link Width');
   folder3.add({ 'Show Node Neighbors': showNodeNeighbors }, 'Show Node Neighbors');
   folder3.add({ 'Pause/Resume Data Reload': pauseResumeDataLoad }, 'Pause/Resume Data Reload');
+  folder3.add({ 'Start Data Load': startDataLoad }, 'Start Data Load');
   folder3.open();
 
 
   // main graph load and backend data update listener
   Sijax.request("watchMasterFile")
 
-  updateLinkCount();
+
 
 
 

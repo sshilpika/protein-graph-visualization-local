@@ -60,7 +60,9 @@ class Handler(FileSystemEventHandler):
             if processed_line_counts < lineC:
                 lines = []
                 with open(os.path.join(Listener.DIRECTORY_TO_WATCH, Listener.FILE_TO_WATCH), "r") as f:
-                    lines = [line for line in itertools.islice(f, processed_line_counts-1, lineC)]
+                    a = processed_line_counts-1
+                    a = (abs(a)+a)//2
+                    lines = [line for line in itertools.islice(f, a, lineC)]
 
                 with open(os.path.join(Listener.DIRECTORY_TO_WATCH, Listener.FILE_TO_WRITE), "w") as f:
                     f.write("digraph G {\n")
