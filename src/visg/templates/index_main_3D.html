@@ -66,7 +66,7 @@
             return showNeighbors ? node.neighbors.length === 0 ? `${node.id} → []` : `${node.id} → ${getChunks(node.neighbors)}`: `${node.id}`;
           })
           .nodeColor(node => {
-            return highlightNodes.has(node.id) ? node.id === hoverNode ? 'red' : 'rgba(255,160,0,0.8)' : "gray";
+            return highlightNodes.has(node.id) ? node.id === hoverNode ? 'red' : '#FFA000' : "gray";
           })
           .nodeVal(node => (node.neighbors.length > 20 && node.neighbors.length < 30) ? 2 : (node.neighbors.length >= 30) ? 3 : 1)
           .nodeResolution(20)
@@ -90,17 +90,20 @@
             // no state change
             if (!node && !highlightNodes.size) return;
 
-            if (node && !highlightNodes.has(node.id)) {
+            if (node && !highlightNodes.has(node.id)) { // show link directions on hover
 
               highlightNodes.add(node.id);
               node.neighbors.forEach(neighbor => highlightNodes.add(neighbor));
               node.links.forEach(link => highlightLinks.add(link));
-            }else{
+
+            }else{ // clear link directions
+
               highlightNodes.clear();
               highlightLinks.clear();
               hoverNode = null;
               updateHighlight();
               return;
+
             }
 
             hoverNode = !node ? null : node.id || null;
