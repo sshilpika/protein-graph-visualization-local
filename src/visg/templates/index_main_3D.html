@@ -76,7 +76,7 @@
             if(showLinkParticle)
               return 8;
             else
-              return [...highlightLinks].filter((x) => x.source.id===link.source.id && x.target.id===link.target.id).length !== 0 ? 8 : 0;
+              return [...highlightLinks].filter((x) => x.source.id===link.source.id && x.target.id===link.target.id).length !== 0 ? 20 : 0;
           })
           .linkDirectionalParticleWidth(2)
           .linkWidth(link => (showLinkWidth && link.penwidth) ? link.penwidth : 0 )
