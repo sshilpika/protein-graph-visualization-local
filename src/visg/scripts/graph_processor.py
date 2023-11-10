@@ -61,8 +61,8 @@ class Protein_Graph:
     def remove_nodes_from_graph(self):
         remove = [node for node,degree in dict(self.G.degree()).items() if degree < Protein_Graph.minlink_count or degree > Protein_Graph.maxlink_count]
         self.G.remove_nodes_from(remove)
-        remove = [node for node,degree in dict(self.G.degree()).items() if degree == 0 ]
-        self.G.remove_nodes_from(remove)
+#         remove = [node for node,degree in dict(self.G.degree()).items() if degree == 0 ]
+#         self.G.remove_nodes_from(remove)
 
     @staticmethod
     def wc_l(directory_path, filename):
@@ -157,6 +157,7 @@ class Protein_Graph:
             return (step, k)
 
         results = Parallel(n_jobs=10)(delayed(process_graph)(k, i, step, data_main, pgraph.G, Protein_Graph.data_path, Protein_Graph.data_part_width, Protein_Graph.finalK) for k,i in enumerate(range(step,len(data_main["nodes"])+step, step)))
+        print("results", results)
         increment_k  = max(results, key=itemgetter(1))[1] + 1
         print(results, increment_k)
 
