@@ -281,7 +281,7 @@
     updateHighlight();
 
     const nlen = result.nodes ? new Set(result.nodes).size : 0;
-    const llen = result.links ? result.links.length : 0;
+    const llen = result.links ? getUniqueLinks(result.links).length : 0;
 
     document.getElementById("stats").innerHTML = `Processed proteins ${nlen} and interactions ${llen}`;
 
