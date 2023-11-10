@@ -32,6 +32,7 @@ class Listener:
     FILE_TO_WATCH = master_filename
     FILE_TO_WRITE = new_data_master_filename
     watchFlag = True
+    reset_graph_flag = False
 
     def __init__(self):
         self.observer = Observer()
@@ -56,7 +57,7 @@ class Handler(FileSystemEventHandler):
         elif event.src_path.endswith(Listener.FILE_TO_WATCH) and Listener.watchFlag:
             lineC = Protein_Graph.wc_l(Listener.DIRECTORY_TO_WATCH, Listener.FILE_TO_WATCH)
             processed_line_counts = Protein_Graph.processed_line_counts
-            print("file changed", processed_line_counts, Listener.FILE_TO_WATCH, Listener.watchFlag, lineC)
+            print("file changed", processed_line_counts, Listener.FILE_TO_WATCH, Listener.watchFlag, " lines added=", lineC)
             if processed_line_counts < lineC:
                 lines = []
                 with open(os.path.join(Listener.DIRECTORY_TO_WATCH, Listener.FILE_TO_WATCH), "r") as f:
@@ -72,6 +73,20 @@ class Handler(FileSystemEventHandler):
                     processed_line_counts = lineC
                 finalK = Protein_Graph.get_graph(Protein_Graph.minlink_count, Protein_Graph.maxlink_count, Listener.FILE_TO_WRITE, True, False)
                 print(f'new final counter value is {finalK}')
+            else: # trigger reset
+                Listener.reset_graph_flag = True
+
+
+
+
+def check_reset_graph_flag(obj_response, minlink_count, maxlink_count):
+    if Listener.reset_graph_flag:
+        toggle_listener(False)
+        finalK = Protein_Graph.get_graph(minlink_count, maxlink_count, master_filename, True, True)
+        toggle_listener(True)
+        obj_response.script("reloadGraphData(reset = true, stopAt = "+str(finalK)+")")
+
+    Listener.reset_graph_flag = False
 
 
 
@@ -123,6 +138,7 @@ def index():
         g.sijax.register_callback('watchMasterFile', startListener)
         g.sijax.register_callback('setWatchFlag', setWatchFlag)
         g.sijax.register_callback('checkStopAt', checkFinalK)
+        g.sijax.register_callback('checkResetGraph', check_reset_graph_flag)
         return g.sijax.process_request()
 
     return render_template("index_main_3D.html")

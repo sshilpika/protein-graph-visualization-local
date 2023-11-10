@@ -54,7 +54,8 @@
   let enablePointerInteractions = true;
   let pauseAnimation = false;
   let showLinkWidth = false;
-  let counterStopAt = 10;
+  let counterStopAt = 0;
+  let fitAfter = 1;
 
   const Graph = ForceGraph3D()(elem)
           .backgroundColor(bckColor) //#101020
@@ -177,13 +178,18 @@
         if(reset) reset = false;
         counter+=1;
 
-        if(counter % 2 === 0)
+        if(Graph.graphData() && Graph.graphData().nodes && Graph.graphData().nodes > 500)
+          fitAfter = 2
+
+        console.log("fitAfter",fitAfter)
+        if(counter % fitAfter === 0)
           zoomToFit();
 
       }
 
       //if(counter >= counterStopAt)
       Sijax.request("checkStopAt", [counterStopAt])
+      Sijax.request("checkResetGraph", [minLimit, maxLimit])
     }, 15000);
 
     function stopFunction() {
@@ -272,12 +278,24 @@
     Graph.graphData(result);
     updateHighlight();
 
-    const nlen = result.nodes ? result.nodes.length : 0;
+    const nlen = result.nodes ? new Set(result.nodes).size : 0;
     const llen = result.links ? result.links.length : 0;
 
     document.getElementById("stats").innerHTML = `Processed proteins ${nlen} and interactions ${llen}`;
 
 
+  }
+
+
+  function getUniqueLinks(data){
+    return data.reduce(function(a, b) {
+
+      if(!(a.includes(b['source']+"_"+b['target'])))
+      {
+        a.push(b['source']+"_"+b['target'])
+      }
+      return a
+    }, [])
   }
 
 
