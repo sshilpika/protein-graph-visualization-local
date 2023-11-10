@@ -275,8 +275,8 @@
   //Define GUI and functions
   const Settings = function() {
     this.redDistance = 10000;
-    this.MinLinks = 0;
-    this.MaxLinks = 3000000;
+    this.MinLinks = minLimit;
+    this.MaxLinks = maxLimit;
     this.NodeDistance = collisonStrengthVal;
   };
 
@@ -351,7 +351,7 @@
 
   function startDataLoad(){
     resetGraph();
-    updateLinkCount();
+    updateLinkCount(minLimit, maxLimit);
   }
 
 
