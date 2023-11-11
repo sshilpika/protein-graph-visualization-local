@@ -294,10 +294,11 @@
       links: links.concat(dataPart.links)//[...links, ...dataPart.links ]
     };
 
-    // const nlen = result.nodes ? new Set(result.nodes).size : 0;
-    // const llen = result.links ? getUniqueLinks(result.links).length : 0;
+    const nlen = result.nodes ? new Set(result.nodes).size : 0;
+    const llen = result.links ? getUniqueLinks(result.links).length : 0;
 
-    Sijax.request("getProteinStats")
+    // Sijax.request("getProteinStats")
+    setStats(nlen, llen);
 
     Graph.graphData(result);
     updateHighlight();
