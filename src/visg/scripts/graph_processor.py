@@ -115,7 +115,7 @@ class Protein_Graph:
             all_nodes = [d["id"] for d in data_main_part["nodes"]]
 
             data_main_part["links"] = []
-            if len(data_main["links"]) > 100000:
+            if len(data_main["links"]) > 10000:
                 data_main_part["links"] = [link for link in data_main["links"] if link["source"] in all_nodes and link["target"] in all_nodes]
             else:
                 for link in data_main["links"]:

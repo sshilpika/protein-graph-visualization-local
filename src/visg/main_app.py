@@ -88,8 +88,33 @@ def set_nodelink_limit(obj_response, minlink_count, maxlink_count):
     toggle_listener(True)
     obj_response.script("reloadGraphData(reset = true, stopAt = "+str(finalK)+")")
 
-def checkFinalK(obj_response, current_stop_at):
-    obj_response.script("updateStopAt("+str(Protein_Graph.finalK)+")")
+def get_protein_stats(obj_response):
+    print(master_filename)
+
+    f = open(os.path.join(data_path, master_filename))
+    s=f.read().replace("-", "_" ).replace("_>", "->")
+    f.close()
+
+    clean_master_file = "clean_stats_"+master_filename
+
+    with open(os.path.join(data_path, clean_master_file), 'w') as f:
+        f.write(s)
+
+    try:
+        A = AGraph(string=open(os.path.join(data_path,clean_master_file)).read())
+    except ValueError:
+        with open(os.path.join(data_path, clean_master_file), 'r') as f:
+            print("Error while retrieving stats lines read are -> ", f.readlines())
+    except:
+        print("file reading failed at stats")
+    else:
+        G = nx.DiGraph(A)
+
+
+    nlen = len(list(G.nodes))
+    llen = len(list(G.edges))
+
+    obj_response.script("setStats("+str(nlen)+","+str(llen)+")")
 
 
 @app.route('/')
@@ -102,7 +127,7 @@ def index():
     if g.sijax.is_sijax_request:
         g.sijax.register_callback('getDataPartions', get_graph_partions)
         g.sijax.register_callback('setNodeLinkLimit', set_nodelink_limit)
-#         g.sijax.register_callback('checkStopAt', checkFinalK)
+        g.sijax.register_callback('getProteinStats', get_protein_stats)
         g.sijax.register_callback('checkGraphUpdates', check_file_updates)
         return g.sijax.process_request()
 

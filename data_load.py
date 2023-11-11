@@ -7,15 +7,15 @@ with open(master_file, 'w') as f:
     f.write("digraph G {\n")
     f.write("}")
 
-time.sleep(5)
+time.sleep(10)
 
 linesall = []
 with open(all_dot, 'r') as f:
     linesall = f.readlines()[1:-1]
 print(len(linesall))
-step = 500
+step = 1
 for i, j in zip(range(0,len(linesall), step), range(step,len(linesall), step)):
-    time.sleep(5)
+    time.sleep(3)
 
     with open(master_file, 'r') as f:
         smlines = f.readlines()
