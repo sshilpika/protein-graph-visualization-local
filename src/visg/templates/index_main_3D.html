@@ -57,7 +57,7 @@
   let counterStopAt = 0;
   let fitAfter = 1;
   var myInterval = null;
-  const timerV = 9000;
+  const timerV = 15000;
   const timerStep = 10800;
   var currTimerStep = timerStep;
 
@@ -212,12 +212,6 @@
           zoomToFit();
 
       }
-
-      if(counter * timerV * 0.001 > currTimerStep){
-        startDataLoad()
-        currTimerStep += timerStep;
-      }
-
 
       Sijax.request("checkGraphUpdates")
     }, timerV);

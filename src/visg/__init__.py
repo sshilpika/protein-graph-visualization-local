@@ -14,7 +14,7 @@ app.config['SIJAX_JSON_URI'] = '/static/js/sijax/json2.js'
 flask_sijax.Sijax(app)
 
 data_path = "./visg/static/data/"
-master_filename = "interactions_full_run.dot"#"small_data.dot" #interactions_full_run.dot
+master_filename = "interactions_full_run_static.dot"#"small_data.dot" #interactions_full_run.dot
 master_file = os.path.join(data_path, master_filename)
 data_part_width = 500
 new_data_master_filename = "temp_"+master_filename

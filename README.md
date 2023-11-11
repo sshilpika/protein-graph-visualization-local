@@ -30,10 +30,37 @@ Note: You may need to install [pygraphvis](https://pygraphviz.github.io/document
 
 5. Start server
    ```
-   ./start.sh
+   ./start-local.sh
    ```
 
 6. Open browser (Google Chrome preferred)
     ```angular2html
-    http://127.0.0.1:5000/index
+    http://127.0.0.1:5001/index
     ```
+
+## Instructions to start the server
+
+1. Change directory to `./src`
+
+   ```
+   cd /path/to/project/src
+   ```
+
+2. Activate conda environment
+
+   ```
+   conda activate myenv
+   ```
+   
+3. Start server
+   ```
+   ./start-local.sh
+   ```
+
+4. Open browser (Google Chrome preferred)
+    ```angular2html
+    http://127.0.0.1:5001/index
+    ```
+   
+
+
