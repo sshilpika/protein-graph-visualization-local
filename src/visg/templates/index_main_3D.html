@@ -56,6 +56,7 @@
   let showLinkWidth = false;
   let counterStopAt = 0;
   let fitAfter = 1;
+  var myInterval = null;
 
   const Graph = ForceGraph3D()(elem)
           .backgroundColor(bckColor) //#101020
@@ -64,7 +65,23 @@
           .enablePointerInteraction(enablePointerInteractions)
           .nodeId('id')
           .nodeLabel(node => {
-            return showNeighbors ? node.neighbors.length === 0 ? `${node.id} → []` : `${node.id} (In → ${node.in_degree}, Out → ${node.out_degree}) </br> Neighbors → ${getChunks(node.neighbors)}`: `${node.id} (In → ${node.in_degree}, Out → ${node.out_degree})`;
+            // console.log(node.in_degree, node.out_degree, node.neighbors)
+
+            if(showNeighbors){
+              if(node.neighbors.length === 0){
+                return `${node.id} → []`
+              } else{
+                let inD = [...new Set(node.in_degree)].length;
+                let outD = [...new Set(node.out_degree)].length;
+                return `${node.id} (In → ${inD}, Out → ${outD}) </br> Neighbors → ${getChunks(node.neighbors)}`
+              }
+
+            }else{
+              let inD = [...new Set(node.in_degree)].length;
+              let outD = [...new Set(node.out_degree)].length;
+              return `${node.id} (In → ${inD}, Out → ${outD})`
+            }
+
           })
           .nodeColor(node => {
 
@@ -166,15 +183,19 @@
 
   // module for timed calls for graph updates
 
-  function reloadGraphData( reset = false, stopAt = counterStopAt ) {
+  function reloadGraphData( reset = false, stopAt = counterStopAt ){
 
     counter = 0;
-    console.log("stop at", +stopAt, counter, counterStopAt)
     counterStopAt = +stopAt;
-    const myInterval = setInterval(() => {
+    console.log("stop at", +stopAt, "counter",counter, "counterStopAt",counterStopAt)
+
+     myInterval = setInterval(() => {
+      console.log("counter running", counter,  counterStopAt, counter < counterStopAt)
       if(!pauseAnimation && counter < counterStopAt){
         console.log("counter", counter, counterStopAt)
-        dataUpdateCallback(reset);
+
+        Sijax.request('getDataPartions', [counter.toString(), reset.toString()]);
+
         if(reset) reset = false;
         counter+=1;
 
@@ -190,32 +211,23 @@
       }
 
       //if(counter >= counterStopAt)
-      Sijax.request("checkStopAt", [counterStopAt])
-      Sijax.request("checkResetGraph", [minLimit, maxLimit])
-    }, 15000);
+      // Sijax.request("checkStopAt", [counterStopAt])
+      Sijax.request("checkGraphUpdates")
+    }, 9000);
 
-    function stopFunction() {
-      clearInterval(myInterval);
-    }
 
-    return {
-      stopFunction: stopFunction,
-      myInterval: myInterval
 
-    };
+  }
 
+  function stopFunction() {
+    clearInterval(myInterval);
+    console.log("my interval stopped", myInterval)
   }
 
   // stop the timer at counterStopAt - which is updated as the data comes in
   function updateStopAt(newCounterStop) {
 
     counterStopAt = (counterStopAt !== +newCounterStop) ? newCounterStop: counterStopAt;
-  }
-
-  // callback for processing data partitions
-  function dataUpdateCallback(reset){
-    Sijax.request('getDataPartions', [counter.toString(), reset.toString()]);
-
   }
 
   // reset Graph
@@ -231,6 +243,7 @@
     if(reset){
       console.log("resetting...")
       resetGraph();
+      console.log("reset done.")
     }
 
     const { nodes, links } = Graph.graphData();
@@ -248,17 +261,20 @@
           nodesFound.push(n.id);
           const oldLinkVals = [...dataPart.links].filter(newL => (newL.source === n.id) || (newL.target === n.id))
 
-          let inLinks = 0;
-          let outLinks = 0;
+          // let inLinks = [];
+          // let outLinks = [];
           oldLinkVals.forEach(inoutl => {
             if(n.id === inoutl.source)
-              outLinks+=1
+              n.out_degree.push(inoutl.target)
             else if (n.id === inoutl.target)
-              inLinks +=1
+              n.in_degree.push(inoutl.source)
           })
 
-          n.in_degree += inLinks;
-          n.out_degree += outLinks;
+          n.out_degree = [...new Set(n.out_degree)];
+          n.in_degree = [...new Set(n.in_degree)];
+
+          // n.in_degree += inLinks;
+          // n.out_degree += outLinks;
 
           n.links = [...n.links, ...oldLinkVals]
           n.neighbors = [...new Set([...n.neighbors, ...oldNVals.neighbors])]
@@ -274,27 +290,27 @@
 
     const result = {
       nodes: [...oldNodes, ...newNodes ],
-      links: [...links, ...dataPart.links ]
+      links: links.concat(dataPart.links)//[...links, ...dataPart.links ]
     };
-
-    Graph.graphData(result);
-    updateHighlight();
 
     const nlen = result.nodes ? new Set(result.nodes).size : 0;
     const llen = result.links ? getUniqueLinks(result.links).length : 0;
 
     document.getElementById("stats").innerHTML = `Processed proteins ${nlen} and interactions ${llen}`;
 
+    Graph.graphData(result);
+    updateHighlight();
 
   }
 
 
   function getUniqueLinks(data){
     return data.reduce(function(a, b) {
-
-      if(!(a.includes(b['source']+"_"+b['target'])))
+      let s = typeof b.source === 'object' ? b.source.id : b.source;
+      let t = typeof b.target === 'object' ? b.target.id : b.target;
+      if(!(a.includes(s+"_"+t)))
       {
-        a.push(b['source']+"_"+b['target'])
+        a.push(s+"_"+t)
       }
       return a
     }, [])
@@ -372,20 +388,20 @@
 
   // update graph when max and min links connecting the graph is specified
   function updateLinkCount(minLinks = settings.MinLinks, maxLinks = settings.MaxLinks) {
-    reloadGraphData().stopFunction()
+    stopFunction()
     console.log("Setting min and max node links!", minLinks, maxLinks )
     // pauseAnimation = true;
     Sijax.request("setNodeLinkLimit", [minLinks, maxLinks])
 
   }
 
+
   function startDataLoad(){
     resetGraph();
     updateLinkCount(minLimit, maxLimit);
+    settings.MinLinks = minLimit;
+    settings.MaxLinks = maxLimit
   }
-
-
-
 
   // set up vis for GUI
   const settings = new Settings();
@@ -407,10 +423,9 @@
   folder3.open();
 
 
-  // main graph load and backend data update listener
-  Sijax.request("watchMasterFile");
-  startDataLoad();
 
+  // main graph load and backend data update listener
+  startDataLoad();
 
 
 

@@ -11,6 +11,7 @@ import networkx as nx
 from networkx.readwrite import json_graph
 from joblib import Parallel, delayed
 from operator import itemgetter
+from copy import deepcopy
 
 class Protein_Graph:
     """ Class for reading and updating protein to protein interactions in a graph format.
@@ -27,7 +28,8 @@ class Protein_Graph:
     finalK = 0
     minlink_count = 0
     maxlink_count = 3000000
-    processed_line_counts = 0
+    processed_line_counts = 1
+    processed_links = []
 
 
     def __init__(self):
@@ -54,8 +56,16 @@ class Protein_Graph:
             Protein_Graph.processed_line_counts -= 2
         else:
             Protein_Graph.processed_line_counts = Protein_Graph.wc_l(Protein_Graph.data_path, master_file_name)
-        self.A = AGraph(string=open(os.path.join(Protein_Graph.data_path,master_file_name)).read())
-        self.G = nx.DiGraph(self.A)
+
+        try:
+            self.A = AGraph(string=open(os.path.join(Protein_Graph.data_path,master_file_name)).read())
+        except ValueError:
+            with open(os.path.join(Protein_Graph.data_path,master_file_name), 'r') as f:
+                print("The lines read are -> ", f.readlines())
+        except:
+            print("file reading failed")
+        else:
+            self.G = nx.DiGraph(self.A)
 
 
     def remove_nodes_from_graph(self):
@@ -85,40 +95,66 @@ class Protein_Graph:
 
         dict_json_ = json_graph.node_link_data(pgraph.G)
         data_main = {}
-        data_main["nodes"] = dict_json_["nodes"]
-        data_main["links"] = dict_json_["links"]
+        data_main["nodes"] = deepcopy(dict_json_["nodes"])
+        data_main["links"] = deepcopy(dict_json_["links"])
         for i, l in enumerate(data_main['links']):
             l.update({'id': i})
-        print("Data Cleaning Done...")
+        print("Data Cleaning Done")
 
         step = Protein_Graph.data_part_width
 
         if set_iteratons:
             Protein_Graph.finalK = 0
 
+
         # joblib processing with threads
         def process_graph(k, i, step, data_main, G, data_path, data_part_width, finalK):
-
+            print("Processing..", k, i, len(data_main["links"]))
             data_main_part = {}
-            data_main_part["nodes"] = data_main["nodes"][ i-step : i ]
+            data_main_part["nodes"] = deepcopy(data_main["nodes"][ i-step : i ])
             all_nodes = [d["id"] for d in data_main_part["nodes"]]
-            data_main_part["links"] = [link for link in data_main["links"] if link["source"] in all_nodes and link["target"] in all_nodes]
 
+            data_main_part["links"] = []
+            if len(data_main["links"]) > 100000:
+                data_main_part["links"] = [link for link in data_main["links"] if link["source"] in all_nodes and link["target"] in all_nodes]
+            else:
+                for link in data_main["links"]:
+
+                    if link['source']+"_"+link['target'] not in Protein_Graph.processed_links:
+
+                        if link["source"] in all_nodes and link["target"] in all_nodes:
+                            data_main_part["links"].append(deepcopy(link))
+
+                        if link["source"] in all_nodes and link["target"] not in all_nodes:
+                            data_main_part["links"].append(deepcopy(link))
+                            Protein_Graph.processed_links.append(link['source']+"_"+link['target'])
+                            data_main_part['nodes'].append({'id': link["target"]})
+                            all_nodes.append(link["target"])
+
+
+                        if link["source"] not in all_nodes and link["target"] in all_nodes:
+                            data_main_part["links"].append(deepcopy(link))
+                            Protein_Graph.processed_links.append(link['source']+"_"+link['target'])
+                            data_main_part['nodes'].append({'id': link["source"]})
+                            all_nodes.append(link["source"])
+
+
+            print("Processing links done..")
             for key in data_main.keys():
                 data_main_part_meta = {}
                 for key in data_main.keys():
                     if key not in ["nodes", "links"]:
-                        data_main_part_meta[key] = data_main[key]
+                        data_main_part_meta[key] = deepcopy(data_main[key])
 
-            data_main_part_meta['nodes'] = data_main_part['nodes']
-            data_main_part_meta['links'] = data_main_part['links']
+            data_main_part_meta['nodes'] = deepcopy(data_main_part['nodes'])
+            data_main_part_meta['links'] = deepcopy(data_main_part['links'])
 
             G1 = nx.node_link_graph(data_main_part_meta, directed=True)
-
+            print("Processing nodes ...")
             for n in data_main_part["nodes"]:
                 n["neighbors"] = list(set([nei for nei in list(nx.all_neighbors(G, n["id"])) if nei in all_nodes]))
-                n["in_degree"] = G1.in_degree(n["id"])
-                n["out_degree"] = G1.out_degree(n["id"])
+                n["in_degree"] = [in_edg[0] for in_edg in G1.in_edges(n["id"])]#G1.in_degree(n["id"])
+                n["out_degree"] = [out_edg[1] for out_edg in G1.out_edges(n["id"])]#G1.out_degree(n["id"])
                 n["links"] = []
                 n['node_neighbor_count'] = 0
 
@@ -148,16 +184,22 @@ class Protein_Graph:
                         link.update(G.get_edge_data(s, t))
                         n["links"].append(link)
 
-
-
-
+            print("Saving file...")
             with open(os.path.join(data_path,"graph_master_part"+str(data_part_width)+"_"+str(k + finalK)+".json"), 'w') as f:
                 json.dump(data_main_part, f, ensure_ascii=False)
 
             return (step, k)
 
         results = Parallel(n_jobs=10)(delayed(process_graph)(k, i, step, data_main, pgraph.G, Protein_Graph.data_path, Protein_Graph.data_part_width, Protein_Graph.finalK) for k,i in enumerate(range(step,len(data_main["nodes"])+step, step)))
-        print("results", results)
+#         results = []
+#         for k,i in enumerate(range(step,len(data_main["nodes"])+step, step)):
+#             x = process_graph(k, i, step, data_main, pgraph.G, Protein_Graph.data_path, Protein_Graph.data_part_width, Protein_Graph.finalK)
+#             results.append(x)
+#             print(x)
+
+        Protein_Graph.processed_links = []
+        if len(results) == 0:
+            return -1
         increment_k  = max(results, key=itemgetter(1))[1] + 1
         print(results, increment_k)
 
