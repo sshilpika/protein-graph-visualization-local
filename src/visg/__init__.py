@@ -16,7 +16,7 @@ flask_sijax.Sijax(app)
 data_path = "./visg/static/data/"
 master_filename = "interactions_full_run_static.dot"#"small_data.dot" #interactions_full_run.dot
 master_file = os.path.join(data_path, master_filename)
-data_part_width = 500
+data_part_width = 100
 new_data_master_filename = "temp_"+master_filename
 
 watchFlag = True
