@@ -126,9 +126,9 @@ def index():
 
     if g.sijax.is_sijax_request:
         g.sijax.register_callback('getDataPartions', get_graph_partions)
-        g.sijax.register_callback('setNodeLinkLimit', set_nodelink_limit)
+#         g.sijax.register_callback('setNodeLinkLimit', set_nodelink_limit)
 #         g.sijax.register_callback('getProteinStats', get_protein_stats)
-        g.sijax.register_callback('checkGraphUpdates', check_file_updates)
+#         g.sijax.register_callback('checkGraphUpdates', check_file_updates)
         return g.sijax.process_request()
 
     return render_template("index_main_3D.html")

@@ -165,6 +165,7 @@ src/visg/static/js/sijax/
 !src/visg/static/data/master.dot
 !src/visg/static/data/interactions_full_run.dot
 !src/visg/static/data/interactions_full_run_static.dot
+!src/visg/static/data/graph_master_part100_*
 
 .idea/
 

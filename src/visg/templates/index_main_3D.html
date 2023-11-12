@@ -54,10 +54,10 @@
   let enablePointerInteractions = true;
   let pauseAnimation = false;
   let showLinkWidth = false;
-  let counterStopAt = 0;
+  let counterStopAt = 195;
   let fitAfter = 1;
   var myInterval = null;
-  const timerV = 15000;
+  const timerV = 12000;
   const timerStep = 10800;
   var currTimerStep = timerStep;
 
@@ -213,7 +213,7 @@
 
       }
 
-      Sijax.request("checkGraphUpdates")
+      // Sijax.request("checkGraphUpdates")
     }, timerV);
 
 
@@ -393,19 +393,20 @@
   }
 
   // update graph when max and min links connecting the graph is specified
-  function updateLinkCount(minLinks = settings.MinLinks, maxLinks = settings.MaxLinks) {
-    stopFunction()
-    console.log("Setting min and max node links!", minLinks, maxLinks )
-    // pauseAnimation = true;
-    Sijax.request("setNodeLinkLimit", [minLinks, maxLinks])
-
-  }
+  // function updateLinkCount(minLinks = settings.MinLinks, maxLinks = settings.MaxLinks) {
+  //   stopFunction()
+  //   console.log("Setting min and max node links!", minLinks, maxLinks )
+  //   // pauseAnimation = true;
+  //   Sijax.request("setNodeLinkLimit", [minLinks, maxLinks])
+  //
+  // }
 
 
   function startDataLoad(){
     resetGraph();
 
-    updateLinkCount(minLimit, maxLimit);
+    // updateLinkCount(minLimit, maxLimit);
+    reloadGraphData()
     settings.MinLinks = minLimit;
     settings.MaxLinks = maxLimit
   }
@@ -414,11 +415,11 @@
   const settings = new Settings();
   const gui = new dat.GUI();
 
-  var folder2 = gui.addFolder('Sparse Layout Settings');
-  const controllerTwo = folder2.add(settings, 'MinLinks', 0, 20000);
-  const controllerThree = folder2.add(settings, 'MaxLinks', 0, 4000000);
-  folder2.add({ 'Enter': updateLinkCount }, 'Enter');
-  folder2.open();
+  // var folder2 = gui.addFolder('Sparse Layout Settings');
+  // const controllerTwo = folder2.add(settings, 'MinLinks', 0, 20000);
+  // const controllerThree = folder2.add(settings, 'MaxLinks', 0, 4000000);
+  // folder2.add({ 'Enter': updateLinkCount }, 'Enter');
+  // folder2.open();
 
   var folder3 = gui.addFolder('GUI Buttons');
   folder3.add({ 'Zoom to Fit': zoomToFit }, 'Zoom to Fit');
