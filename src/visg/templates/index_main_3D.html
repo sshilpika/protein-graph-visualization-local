@@ -30,9 +30,22 @@
 </head>
 <body>
 <div>
-  <p id="stats" style="color:white; position: fixed; z-index: 1; padding-left: 10px; " ><i></i></p>
+  <p id="stats" style="color:white; position: fixed; z-index: 1; padding-left: 10px;" ><i></i></p>
 </div>
-<div id="3d-graph"></div>
+<div id="main-title-container">
+  <p id="title" style="color:white; position: fixed; z-index: 1;  " ></p>
+</div>
+<div id="3d-graph" style="position: fixed;"></div>
+<div id ="logo-images" style="visibility:hidden;">
+  <!-- <img src="./static/data/logos_all.png" style="position: fixed; z-index: 10; padding-left: 5px; padding-top: 25px; " alt="ANL" width="445" height="65"> -->
+  <img src="./static/data/ALCF.png" style="position: fixed; z-index: 10; padding-left: 5px; padding-top: 25px; " alt="ANL" width="200" height="30"> 
+  <img src="./static/data/intel.png" style="position: fixed; z-index: 10; padding-left: 225px; padding-top: 25px; " alt="Intel" width="70" height="25"> 
+  <img src="./static/data/HPE.png" style="position: fixed; z-index: 10; padding-left: 310px; " alt="HPE" width="150" height="65"> 
+
+</div>
+
+
+
 
 
 <script>
@@ -303,10 +316,27 @@
     Graph.graphData(result);
     updateHighlight();
 
+    // adding logos and title
+
+    document.getElementById("logo-images").style.paddingTop = (elem.offsetHeight-100).toString()+"px";
+
+    document.getElementById("logo-images").style.paddingLeft = (elem.offsetWidth/1.37).toString()+"px";
+
+    document.getElementById("logo-images").style.visibility = "visible";
+
+    console.log("elem.offsetWidth",elem.offsetWidth, elem.offsetHeight)
+    // document.getElementById("title").style.paddingLeft = ((elem.offsetWidth/3)-120).toString()+"px";
+    document.getElementById("title").style.width = elem.offsetWidth.toString()+"px"
+
+    document.getElementById("title").innerHTML = `Protein-Protein Interactions using Large Language Models`;
+
+
   }
 
   function setStats(nlen, llen){
-    document.getElementById("stats").innerHTML = `Processed proteins ${nlen} and interactions ${llen}`;
+    let intr = (llen <= 1) ? "interaction" : "interactions";
+    let prt = (nlen <= 1) ? "protein" : "proteins";
+    document.getElementById("stats").innerHTML = `Processed ${nlen} ${prt} and ${llen} ${intr}`;
   }
 
 
@@ -435,6 +465,7 @@
   // main graph load and backend data update listener
   startDataLoad();
 
+  
 
 
 </script>
