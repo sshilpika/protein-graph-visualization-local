@@ -176,7 +176,8 @@
           });
 
   // light the 3D scene
-  Graph.lights()[0].intensity = 500.0;
+  console.log("color ", Graph.lights(), Graph.lights()[0], Graph.lights()[1])
+  Graph.lights()[0].intensity = 1000.0;
   Graph.lights()[1].intensity = 15.0;
 
   // force directed d3 simulation set up
@@ -474,9 +475,6 @@
     Graph.height(window.innerHeight);
     document.getElementById("logo-images").style.paddingTop = (window.innerHeight-100).toString()+"px";
     document.getElementById("logo-images").style.paddingLeft = (window.innerWidth-460).toString()+"px";
-
-    // document.getElementById("logo-images").style.visibility = "visible";
-    console.log("elem.innerWidth", window.innerWidth, elem.offsetWidth)
     document.getElementById("title").style.width = window.innerWidth.toString()+"px";
   });
 
