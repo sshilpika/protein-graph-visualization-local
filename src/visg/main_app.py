@@ -76,7 +76,7 @@ def read_from_dot(dot_file):
     dict_json_ = json_graph.node_link_data(G)
 
 def get_graph_partions(obj_response, filename, reset):
-    f = open(os.path.join(data_path,"graph_master_part"+str(data_part_width)+"_"+str(filename)+".json"))
+    f = open(os.path.join(data_path,"graph_master_part"+str(data_part_width)+"_"+str(int(filename)+1)+".json"))
     data_partition = json.load(f)
     obj_response.script("addGraphData("+str(data_partition)+","+reset+")")
 
