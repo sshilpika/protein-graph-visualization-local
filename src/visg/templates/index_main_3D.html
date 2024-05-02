@@ -33,10 +33,10 @@
   <p id="stats" style="color:white; position: fixed; z-index: 1; padding-left: 10px;" ><i></i></p>
 </div>
 <div id="main-title-container">
-  <p id="title" style="color:white; position: fixed; z-index: 1;  " ></p>
+  <p id="title" style="color:white; position: fixed; z-index: 1;  " >Protein-Protein Interactions using Large Language Models</p>
 </div>
 <div id="3d-graph" style="position: fixed;"></div>
-<div id ="logo-images" style="visibility:hidden;">
+<div id ="logo-images" style="visibility:visible;">
   <!-- <img src="./static/data/logos_all.png" style="position: fixed; z-index: 10; padding-left: 5px; padding-top: 25px; " alt="ANL" width="445" height="65"> -->
   <img src="./static/data/ALCF.png" style="position: fixed; z-index: 10; padding-left: 5px; padding-top: 25px; " alt="ANL" width="200" height="30"> 
   <img src="./static/data/intel.png" style="position: fixed; z-index: 10; padding-left: 225px; padding-top: 25px; " alt="Intel" width="70" height="25"> 
@@ -328,7 +328,7 @@
     // document.getElementById("title").style.paddingLeft = ((elem.offsetWidth/3)-120).toString()+"px";
     document.getElementById("title").style.width = elem.offsetWidth.toString()+"px"
 
-    document.getElementById("title").innerHTML = `Protein-Protein Interactions using Large Language Models`;
+    // document.getElementById("title").innerHTML = `Protein-Protein Interactions using Large Language Models`;
 
 
   }
@@ -464,6 +464,21 @@
 
   // main graph load and backend data update listener
   startDataLoad();
+  document.getElementById("title").style.width = window.innerWidth.toString()+"px";
+  document.getElementById("logo-images").style.paddingTop = (window.innerHeight-100).toString()+"px";
+  document.getElementById("logo-images").style.paddingLeft = (window.innerWidth-460).toString()+"px";
+
+  // graph resize on window resize
+  d3.select(window).on("resize", () => {
+    Graph.width(window.innerWidth);
+    Graph.height(window.innerHeight);
+    document.getElementById("logo-images").style.paddingTop = (window.innerHeight-100).toString()+"px";
+    document.getElementById("logo-images").style.paddingLeft = (window.innerWidth-460).toString()+"px";
+
+    // document.getElementById("logo-images").style.visibility = "visible";
+    console.log("elem.innerWidth", window.innerWidth, elem.offsetWidth)
+    document.getElementById("title").style.width = window.innerWidth.toString()+"px";
+  });
 
   
 
