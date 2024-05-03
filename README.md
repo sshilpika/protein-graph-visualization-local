@@ -21,7 +21,7 @@ A Python library for visualizing dynamically generated protein interactions usin
     pip install -r requirements.txt
     ```
 Note: You may need to install [pygraphvis](https://pygraphviz.github.io/documentation/stable/install.html) using conda forge:
-`conda install --channel conda-forge pygraphviz`
+`conda install --channel conda-forge pygraphviz` (This may need a restart of your command prompt or terminal)
 
 4. The data file in dot file format should be stored in
    ```

@@ -108,14 +108,14 @@
                 return '#FFA000';
               }
             }else{
-              return "gray";
+              return "white";
             }
 
           })
           .nodeVal(node => (node.neighbors.length > 20 && node.neighbors.length < 30) ? 2 : (node.neighbors.length >= 30) ? 3 : 1)
           .nodeResolution(20)
           .linkColor(link => link.color ? link.color : 'gray' )
-          .linkOpacity(0.5)
+          .linkOpacity(1)
           .linkDirectionalParticles(link => {
             if(showLinkParticle)
               return 8;
